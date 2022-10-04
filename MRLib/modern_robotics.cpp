@@ -18,23 +18,14 @@ namespace mr
 		return (std::abs(val) < .000001);
 	}
 
-	Eigen::MatrixXd ad(Eigen::VectorXd V)
-	{
-		Eigen::Matrix3d omgmat = VecToso3(Eigen::Vector3d(V(0), V(1), V(2)));
-
-		Eigen::MatrixXd result(6, 6);
-		result.topLeftCorner<3, 3>() = omgmat;
-		result.topRightCorner<3, 3>() = Eigen::Matrix3d::Zero(3, 3);
-		result.bottomLeftCorner<3, 3>() = VecToso3(Eigen::Vector3d(V(3), V(4), V(5)));
-		result.bottomRightCorner<3, 3>() = omgmat;
-		return result;
-	}
 
 	Eigen::MatrixXd Normalize(Eigen::MatrixXd V)
 	{
 		V.normalize();
 		return V;
 	}
+
+	/*--------------------第三章 刚体运动 P69--------------------*/
 
 	Eigen::MatrixXd RotInv(const Eigen::MatrixXd& R)
 	{
@@ -258,6 +249,8 @@ namespace mr
 		return m_ret;
 	}
 
+	/*--------------------第四章 正向运动学 P99--------------------*/
+
 	Eigen::MatrixXd FKinSpace(const Eigen::MatrixXd& M,
 							  const Eigen::MatrixXd& Slist,
 							  const Eigen::VectorXd& thetaList)
@@ -281,6 +274,8 @@ namespace mr
 		}
 		return T;
 	}
+
+	/*--------------------第五章 一阶运动学与静力学 P125--------------------*/
 
 	Eigen::MatrixXd JacobianSpace(const Eigen::MatrixXd& Slist,
 								  const Eigen::MatrixXd& thetaList)
@@ -315,76 +310,13 @@ namespace mr
 		return Jb;
 	}
 
-
-
-
-
-
-
-	Eigen::MatrixXd ProjectToSO3(const Eigen::MatrixXd& M)
-	{
-		Eigen::JacobiSVD<Eigen::MatrixXd> svd(M, Eigen::ComputeFullU | Eigen::ComputeFullV);
-		Eigen::MatrixXd R = svd.matrixU() * svd.matrixV().transpose();
-		if (R.determinant() < 0)
-		{
-			// In this case the result may be far from M; reverse sign of 3rd column
-			R.col(2) *= -1;
-		}
-		return R;
-	}
-
-	Eigen::MatrixXd ProjectToSE3(const Eigen::MatrixXd& M)
-	{
-		Eigen::Matrix3d R = M.block<3, 3>(0, 0);
-		Eigen::Vector3d t = M.block<3, 1>(0, 3);
-		Eigen::MatrixXd T = RpToTrans(ProjectToSO3(R), t);
-		return T;
-	}
-
-	double DistanceToSO3(const Eigen::Matrix3d& M)
-	{
-		if (M.determinant() > 0)
-		{
-			return (M.transpose() * M - Eigen::Matrix3d::Identity()).norm();
-		}
-		else
-		{
-			return 1.0e9;
-		}
-	}
-
-	double DistanceToSE3(const Eigen::Matrix4d& T)
-	{
-		Eigen::Matrix3d matR = T.block<3, 3>(0, 0);
-		if (matR.determinant() > 0)
-		{
-			Eigen::Matrix4d m_ret;
-			m_ret << matR.transpose()*matR, Eigen::Vector3d::Zero(3),
-				T.row(3);
-			m_ret = m_ret - Eigen::Matrix4d::Identity();
-			return m_ret.norm();
-		}
-		else
-		{
-			return 1.0e9;
-		}
-	}
-
-	bool TestIfSO3(const Eigen::Matrix3d& M)
-	{
-		return std::abs(DistanceToSO3(M)) < 1e-3;
-	}
-
-	bool TestIfSE3(const Eigen::Matrix4d& T)
-	{
-		return std::abs(DistanceToSE3(T)) < 1e-3;
-	}
+	/*--------------------第六章 逆运动学 P144--------------------*/
 
 	bool IKinBody(const Eigen::MatrixXd& Blist,
-				  const Eigen::MatrixXd& M,
-				  const Eigen::MatrixXd& T,
-				  Eigen::VectorXd& thetalist,
-				  double eomg, double ev)
+	              const Eigen::MatrixXd& M,
+	              const Eigen::MatrixXd& T,
+	              Eigen::VectorXd& thetalist,
+	              double eomg, double ev)
 	{
 		int i = 0;
 		int maxiterations = 20;
@@ -413,10 +345,10 @@ namespace mr
 	}
 
 	bool IKinSpace(const Eigen::MatrixXd& Slist,
-				   const Eigen::MatrixXd& M,
-				   const Eigen::MatrixXd& T,
-				   Eigen::VectorXd& thetalist,
-				   double eomg, double ev)
+	               const Eigen::MatrixXd& M,
+	               const Eigen::MatrixXd& T,
+	               Eigen::VectorXd& thetalist,
+	               double eomg, double ev)
 	{
 		int i = 0;
 		int maxiterations = 20;
@@ -442,6 +374,20 @@ namespace mr
 			err = (angular.norm() > eomg || linear.norm() > ev);
 		}
 		return !err;
+	}
+
+	/*--------------------第八章 开链动力学 P197--------------------*/
+
+	Eigen::MatrixXd ad(Eigen::VectorXd V)
+	{
+		Eigen::Matrix3d omgmat = VecToso3(Eigen::Vector3d(V(0), V(1), V(2)));
+
+		Eigen::MatrixXd result(6, 6);
+		result.topLeftCorner<3, 3>() = omgmat;
+		result.topRightCorner<3, 3>() = Eigen::Matrix3d::Zero(3, 3);
+		result.bottomLeftCorner<3, 3>() = VecToso3(Eigen::Vector3d(V(3), V(4), V(5)));
+		result.bottomRightCorner<3, 3>() = omgmat;
+		return result;
 	}
 
 	Eigen::VectorXd InverseDynamics(const Eigen::VectorXd& thetalist,
@@ -496,20 +442,6 @@ namespace mr
 		return taulist;
 	}
 
-	Eigen::VectorXd GravityForces(const Eigen::VectorXd& thetalist,
-								  const Eigen::VectorXd& g,
-								  const std::vector<Eigen::MatrixXd>& Mlist,
-								  const std::vector<Eigen::MatrixXd>& Glist,
-								  const Eigen::MatrixXd& Slist)
-	{
-	    int n = thetalist.size();
-		Eigen::VectorXd dummylist = Eigen::VectorXd::Zero(n);
-		Eigen::VectorXd dummyForce = Eigen::VectorXd::Zero(6);
-		Eigen::VectorXd grav = mr::InverseDynamics(thetalist, dummylist, dummylist, g,
-                                                dummyForce, Mlist, Glist, Slist);
-		return grav;
-	}
-
 	Eigen::MatrixXd MassMatrix(const Eigen::VectorXd& thetalist,
 							   const std::vector<Eigen::MatrixXd>& Mlist,
 							   const std::vector<Eigen::MatrixXd>& Glist,
@@ -543,6 +475,20 @@ namespace mr
 		Eigen::VectorXd c = mr::InverseDynamics(thetalist, dthetalist, dummylist,
                              dummyg, dummyforce, Mlist, Glist, Slist);
 		return c;
+	}
+
+	Eigen::VectorXd GravityForces(const Eigen::VectorXd& thetalist,
+	                              const Eigen::VectorXd& g,
+	                              const std::vector<Eigen::MatrixXd>& Mlist,
+	                              const std::vector<Eigen::MatrixXd>& Glist,
+	                              const Eigen::MatrixXd& Slist)
+	{
+		int n = thetalist.size();
+		Eigen::VectorXd dummylist = Eigen::VectorXd::Zero(n);
+		Eigen::VectorXd dummyForce = Eigen::VectorXd::Zero(6);
+		Eigen::VectorXd grav = mr::InverseDynamics(thetalist, dummylist, dummylist, g,
+		                                           dummyForce, Mlist, Glist, Slist);
+		return grav;
 	}
 
 	Eigen::VectorXd EndEffectorForces(const Eigen::VectorXd& thetalist,
@@ -809,5 +755,64 @@ namespace mr
 		ControlTauTraj_ret.push_back(taumatT.transpose());
 		ControlTauTraj_ret.push_back(thetamatT.transpose());
 		return ControlTauTraj_ret;
+	}
+
+	Eigen::MatrixXd ProjectToSO3(const Eigen::MatrixXd& M)
+	{
+		Eigen::JacobiSVD<Eigen::MatrixXd> svd(M, Eigen::ComputeFullU | Eigen::ComputeFullV);
+		Eigen::MatrixXd R = svd.matrixU() * svd.matrixV().transpose();
+		if (R.determinant() < 0)
+		{
+			// In this case the result may be far from M; reverse sign of 3rd column
+			R.col(2) *= -1;
+		}
+		return R;
+	}
+
+	Eigen::MatrixXd ProjectToSE3(const Eigen::MatrixXd& M)
+	{
+		Eigen::Matrix3d R = M.block<3, 3>(0, 0);
+		Eigen::Vector3d t = M.block<3, 1>(0, 3);
+		Eigen::MatrixXd T = RpToTrans(ProjectToSO3(R), t);
+		return T;
+	}
+
+	double DistanceToSO3(const Eigen::Matrix3d& M)
+	{
+		if (M.determinant() > 0)
+		{
+			return (M.transpose() * M - Eigen::Matrix3d::Identity()).norm();
+		}
+		else
+		{
+			return 1.0e9;
+		}
+	}
+
+	double DistanceToSE3(const Eigen::Matrix4d& T)
+	{
+		Eigen::Matrix3d matR = T.block<3, 3>(0, 0);
+		if (matR.determinant() > 0)
+		{
+			Eigen::Matrix4d m_ret;
+			m_ret << matR.transpose()*matR, Eigen::Vector3d::Zero(3),
+					T.row(3);
+			m_ret = m_ret - Eigen::Matrix4d::Identity();
+			return m_ret.norm();
+		}
+		else
+		{
+			return 1.0e9;
+		}
+	}
+
+	bool TestIfSO3(const Eigen::Matrix3d& M)
+	{
+		return std::abs(DistanceToSO3(M)) < 1e-3;
+	}
+
+	bool TestIfSE3(const Eigen::Matrix4d& T)
+	{
+		return std::abs(DistanceToSE3(T)) < 1e-3;
 	}
 }
