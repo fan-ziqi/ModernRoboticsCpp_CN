@@ -661,4 +661,13 @@ namespace mr
 	 *	 true if T is very close to or in SE(3), false otherwise
 	 */
 	bool TestIfSE3(const Eigen::Matrix4d& T);
+
+	/*
+	 * 功能: 获得旋转矩阵
+	 * 输入: 角度(弧度制)
+	 * 输出: 3x3旋转矩阵
+	 */
+	Eigen::Matrix3d rotx(const double t);
+	Eigen::Matrix3d roty(const double t);
+	Eigen::Matrix3d rotz(const double t);
 }

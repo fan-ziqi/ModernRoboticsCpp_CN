@@ -4,7 +4,7 @@
 #include <cmath>
 #include <vector>
 
-# define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /* pi */
 
 namespace mr
 {
@@ -816,5 +816,38 @@ namespace mr
 	bool TestIfSE3(const Eigen::Matrix4d& T)
 	{
 		return std::abs(DistanceToSE3(T)) < 1e-3;
+	}
+
+	Eigen::Matrix3d rotx(const double t)
+	{
+		Eigen::Matrix3d R;
+		double ct = cos(t); if(NearZero(ct)) ct = 0;
+		double st = sin(t); if(NearZero(st)) st = 0;
+		R << 1,  0,   0,
+			 0,  ct, -st,
+			 0,  st,  ct;
+		return R;
+	}
+
+	Eigen::Matrix3d roty(const double t)
+	{
+		Eigen::Matrix3d R;
+		double ct = cos(t); if(NearZero(ct)) ct = 0;
+		double st = sin(t); if(NearZero(st)) st = 0;
+		R << ct,  0,  st,
+			 0,   1,  0,
+			 -st, 0,  ct;
+		return R;
+	}
+
+	Eigen::Matrix3d rotz(const double t)
+	{
+		Eigen::Matrix3d R;
+		double ct = cos(t); if(NearZero(ct)) ct = 0;
+		double st = sin(t); if(NearZero(st)) st = 0;
+		R << ct, -st,  0,
+			 st,  ct,  0,
+			 0,   0,   1;
+		return R;
 	}
 }
