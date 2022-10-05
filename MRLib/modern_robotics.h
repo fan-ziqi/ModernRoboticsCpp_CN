@@ -3,28 +3,9 @@
 #include <Eigen/Dense>
 #include <vector>
 
-
 namespace mr
 {
-
-	/*
-	 * 功能: Find if the value is negligible enough to consider 0
-	 * 输入: value to be checked as a double
-	 * 返回: Boolean of true-ignore or false-can't ignore
-	 */
-	bool NearZero(const double val);
-
-	/*
-	 * 功能: 返回 a normalized version of the 输入 vector
-	 * 输入: Eigen::MatrixXd
-	 * 输出: Eigen::MatrixXd
-	 * 注: MatrixXd is used instead of VectorXd for the case of row vectors
-	 * 		Requires a copy
-	 *		Useful because of the MatrixXd casting
-	 */
-	Eigen::MatrixXd Normalize(Eigen::MatrixXd V);
-
-	/*--------------------第三章 刚体运动 P69--------------------*/
+	/*--------------------第3章 刚体运动 P69--------------------*/
 
 	/*
 	 * 功能: 计算旋转矩阵R的逆矩阵
@@ -145,7 +126,7 @@ namespace mr
 	 */
 	Eigen::MatrixXd MatrixLog6(const Eigen::MatrixXd& T);
 
-	/*--------------------第四章 正向运动学 P99--------------------*/
+	/*--------------------第4章 正向运动学 P99--------------------*/
 
 	/*
 	 * 功能: 给定末端的初始位形M,空间坐标系下的关节旋量Slist,以及关节值thetalist,计算末端坐标系
@@ -167,7 +148,7 @@ namespace mr
 							 const Eigen::MatrixXd& Blist,
 							 const Eigen::VectorXd& thetaList);
 
-	/*--------------------第五章 一阶运动学与静力学 P125--------------------*/
+	/*--------------------第5章 一阶运动学与静力学 P125--------------------*/
 
 	/*
 	 * 功能: 给定空间坐标系下描述的各关节旋量Si及关节角, 计算空间雅可比Jb(θ)∈R(6xn)
@@ -185,7 +166,7 @@ namespace mr
 	Eigen::MatrixXd JacobianBody(const Eigen::MatrixXd& Blist,
 								 const Eigen::MatrixXd& thetaList);
 
-	/*--------------------第六章 逆运动学 P144--------------------*/
+	/*--------------------第6章 逆运动学 P144--------------------*/
 
 	/*
 	 * 功能: 已知末端坐标系中描述的关节旋量Bi、末端初始位形M、预期的末端位形T、
@@ -226,7 +207,7 @@ namespace mr
 	               Eigen::VectorXd& thetalist,
 	               double eomg, double ev);
 
-	/*--------------------第八章 开链动力学 P197--------------------*/
+	/*--------------------第8章 开链动力学 P197--------------------*/
 
 	/*
 	 * 功能: 计算给定6矢量的6x6矩阵[adV]
@@ -241,12 +222,12 @@ namespace mr
 	 *      taulist = Mlist(thetalist) * ddthetalist + c(thetalist, dthetalist) + g(thetalist) + Jtr(thetalist) * Ftip
 	 * 输入:
 	 *      thetalist: n维关节角度向量0
-	 *      dthetalist: n维关节速度向量0‘
-	 *      ddthetalist: n维关节加速度向量0’‘
+	 *      dthetalist: n维关节速度向量0'
+	 *      ddthetalist: n维关节加速度向量0''
 	 *      g: 重力向量G
 	 *      Ftip: 在坐标系{n+1}中表示的施加到末端执行器的力旋量
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
-	 *      Glist: 连杆空间惯量矩阵G组成的列表
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 * 输出:
 	 *      taulist: 所需关节力-力矩的n维向量τ
@@ -262,7 +243,7 @@ namespace mr
 	 * 输入:
 	 *      thetalist: n维关节角度向量0
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
-	 *      Glist: 连杆空间惯量矩阵G组成的列表
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 * 输出:
 	 *      M: 给定thetalist配置下的n关节串联链惯性矩阵M(θ)
@@ -276,12 +257,12 @@ namespace mr
 	 * 功能: 调用InverseDynamics，且令g=0、Ftip=0、ddthetalist=0
 	 * 输入:
 	 *      thetalist: n维关节角度向量0
-	 *      dthetalist: n维关节速度向量0‘
+	 *      dthetalist: n维关节速度向量0'
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
-	 *      Glist: 连杆空间惯量矩阵G组成的列表
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 * 输出:
-	 *      c: 给定thetalist和dtetalist下的科氏向量和向心项c(0,0‘)
+	 *      c: 给定thetalist和dtetalist下的科氏向量和向心项c(0,0')
 	 */
 	Eigen::VectorXd VelQuadraticForces(const Eigen::VectorXd& thetalist,
 									   const Eigen::VectorXd& dthetalist,
@@ -295,7 +276,7 @@ namespace mr
 	 *      thetalist: n维关节角度向量0
 	 *      g: 重力向量G
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
-	 *      Glist: 连杆空间惯量矩阵G组成的列表
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 * 输出:
 	 *      grav: 重力项g(0)
@@ -312,7 +293,7 @@ namespace mr
 	 *      thetalist: n维关节角度向量0
 	 *      Ftip: 在坐标系{n+1}中表示的施加到末端执行器的力旋量
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
-	 *      Glist: 连杆空间惯量矩阵G组成的列表
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 *
 	 * 输出:
@@ -329,15 +310,15 @@ namespace mr
 	 *      Mlist(thetalist) * ddthetalist = taulist - c(thetalist,dthetalist) - g(thetalist) - Jtr(thetalist) * Ftip
 	 * 输入:
 	 *      thetalist: n维关节角度向量0
-	 *      dthetalist: n维关节速度向量0‘
+	 *      dthetalist: n维关节速度向量0'
 	 *      taulist: 所需关节力-力矩的n维向量τ
 	 *      g: 重力向量G
 	 *      Ftip: 在坐标系{n+1}中表示的施加到末端执行器的力旋量
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
-	 *      Glist: 连杆空间惯量矩阵G组成的列表
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 * 输出:
-	 *      ddthetalist: n维关节加速度向量0’‘
+	 *      ddthetalist: n维关节加速度向量0''
 	 */
 	Eigen::VectorXd ForwardDynamics(const Eigen::VectorXd& thetalist,
 	                                const Eigen::VectorXd& dthetalist,
@@ -352,8 +333,8 @@ namespace mr
 	 * 功能: 使用一阶欧拉积分计算下一时间步的关节角度和速度
 	 * 输入:
 	 *      thetalist[in]: n维关节角度向量0
-	 *      dthetalist[in]: n维关节速度向量0‘
-	 *	    ddthetalist: n维关节加速度向量0’‘
+	 *      dthetalist[in]: n维关节速度向量0'
+	 *	    ddthetalist: n维关节加速度向量0''
 	 *      dt: 时间步长δt
 	 * 输出:
 	 *      thetalist[out]: 一阶欧拉积分后的关节角度向量
@@ -365,23 +346,21 @@ namespace mr
 	               double dt);
 
 	/*
-	 * 功能: Compute the joint forces/torques required to move the serial chain along the given
-	 *	trajectory using inverse dynamics
+	 * 功能: 使用逆动力学计算串联链生成指定轨迹所需要的关节力-力矩
 	 * 输入:
-	 *  thetamat: An N x n matrix of robot joint variables (N: no. of trajecoty time step points; n: no. of robot joints
-	 *  dthetamat: An N x n matrix of robot joint velocities
-	 *  ddthetamat: An N x n matrix of robot joint accelerations
-	 *	g: Gravity vector g
-	 *	Ftipmat: An N x 6 matrix of spatial forces applied by the end-effector (if there are no tip forces
-	 *			 the user should 输入 a zero matrix)
-	 *  Mlist: List of link frames {i} relative to {i-1} at the home position
-	 *  Glist: Spatial inertia matrices Gi of the links
-	 *  Slist: Screw axes Si of the joints in a space frame, in the format
-	 *         of a matrix with the screw axes as the columns.
-	 *
+	 *      thetamat: 关节角度变量0的一个Nxn矩阵(N:轨迹时间步点数; n:机器人关节数量)
+	 *                其中第i行对应于时间t=(i-1)δt处关节变量的n维矩阵(δt为时间步长)
+	 *      dthetamat: 关节速度向量0'的一个Nxn矩阵
+	 *      ddthetamat: 关节加速度向量0''的一个Nxn矩阵
+	 *	    g: 重力向量G
+	 *	    Ftipmat: 末端执行器施加力旋量的Nx6矩阵(若没有末端力，需要输入一个零矩阵)
+	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
+	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
 	 * 输出:
-	 *  taumat: The N x n matrix of joint forces/torques for the specified trajectory, where each of the N rows is the vector
-	 *			of joint forces/torques at each time step
+	 *      taumat: Nxn关节力-力矩矩阵τ(t)，其中N行中的每一行是每个时间步的关节力-力矩矢量。
+	 *              该矩阵表示生成指定轨迹所需要的关节力-力矩τ(t)，其中轨迹由0(t)和Ftip(t)指定。
+	 *              注意，没有必要指定δt。速度0'(t)和加速度0''(t)需要与0(t)一致
 	 */
 	Eigen::MatrixXd InverseDynamicsTrajectory(const Eigen::MatrixXd& thetamat,
 	                                          const Eigen::MatrixXd& dthetamat,
@@ -393,25 +372,23 @@ namespace mr
 	                                          const Eigen::MatrixXd& Slist);
 
 	/*
-	 * 功能: Compute the motion of a serial chain given an open-loop history of joint forces/torques
+	 * 功能: 给定关节力-力矩，使用欧拉积分对机器人的数值方程进行数值积分，计算串联链的运动。
 	 * 输入:
-	 *  thetalist: n-vector of initial joint variables
-	 *  dthetalist: n-vector of initial joint rates
-	 *  taumat: An N x n matrix of joint forces/torques, where each row is is the joint effort at any time step
-	 *	g: Gravity vector g
-	 *	Ftipmat: An N x 6 matrix of spatial forces applied by the end-effector (if there are no tip forces
-	 *			 the user should 输入 a zero matrix)
-	 *  Mlist: List of link frames {i} relative to {i-1} at the home position
-	 *  Glist: Spatial inertia matrices Gi of the links
-	 *  Slist: Screw axes Si of the joints in a space frame, in the format
-	 *         of a matrix with the screw axes as the columns.
-	 *	dt: The timestep between consecutive joint forces/torques
-	 *	intRes: Integration resolution is the number of times integration (Euler) takes places between each time step.
-	 *			Must be an integer value greater than or equal to 1
+	 *      thetalist: n维初始关节角度向量0(0)
+	 *      dthetalist: n维初始关节速度向量0'(0)
+	 *      taumat: Nxn关节力-力矩矩阵τ(t)，其中N行中的每一行是每个时间步的关节力-力矩矢量。
+	 *	    g: 重力向量G
+	 *	    Ftipmat: 末端执行器施加力旋量的Nx6矩阵(若没有末端力，需要输入一个零矩阵)
+	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
+	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
+	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
+	 *	    dt: 时间步长δt
+	 *	    intRes: 积分分辨率是每个时间步长中积分的次数。必须是大于或等于1的整数值
 	 *
-	 * 输出: std::vector of [thetamat, dthetamat]
-	 *  thetamat: The N x n matrix of joint angles resulting from the specified joint forces/torques
-	 *  dthetamat: The N x n matrix of joint velocities
+	 * 输出:
+	 *      std::vector 类型的 [thetamat, dthetamat]
+	 *      thetamat: 由给定关节力-力矩生成的一个Nxn关节角度矩阵，第i行对应n维向量0((i-1)δt)
+	 *      dthetamat: 关节速度向量0'的一个Nxn矩阵，第i行对应n维向量0'((i-1)δt)
 	 */
 	std::vector<Eigen::MatrixXd> ForwardDynamicsTrajectory(const Eigen::VectorXd& thetalist,
 	                                                       const Eigen::VectorXd& dthetalist,
@@ -423,39 +400,7 @@ namespace mr
 	                                                       const Eigen::MatrixXd& Slist,
 	                                                       double dt, int intRes);
 
-	/*
-	 * 功能: Compute the joint control torques at a particular time instant
-	 * 输入:
-	 *  thetalist: n-vector of joint variables
-	 *  dthetalist: n-vector of joint rates
-	 *	eint: n-vector of the time-integral of joint errors
-	 *	g: Gravity vector g
-	 *  Mlist: List of link frames {i} relative to {i-1} at the home position
-	 *  Glist: Spatial inertia matrices Gi of the links
-	 *  Slist: Screw axes Si of the joints in a space frame, in the format
-	 *         of a matrix with the screw axes as the columns.
-	 *  thetalistd: n-vector of reference joint variables
-	 *  dthetalistd: n-vector of reference joint rates
-	 *  ddthetalistd: n-vector of reference joint accelerations
-	 *	Kp: The feedback proportional gain (identical for each joint)
-	 *	Ki: The feedback integral gain (identical for each joint)
-	 *	Kd: The feedback derivative gain (identical for each joint)
-	 *
-	 * 输出:
-	 *  tau_computed: The vector of joint forces/torques computed by the feedback
-	 *				  linearizing controller at the current instant
-	 */
-	Eigen::VectorXd ComputedTorque(const Eigen::VectorXd& thetalist,
-	                               const Eigen::VectorXd& dthetalist,
-	                               const Eigen::VectorXd& eint,
-	                               const Eigen::VectorXd& g,
-	                               const std::vector<Eigen::MatrixXd>& Mlist,
-	                               const std::vector<Eigen::MatrixXd>& Glist,
-	                               const Eigen::MatrixXd& Slist,
-	                               const Eigen::VectorXd& thetalistd,
-	                               const Eigen::VectorXd& dthetalistd,
-	                               const Eigen::VectorXd& ddthetalistd,
-	                               double Kp, double Ki, double Kd);
+	/*--------------------第9章 轨迹生成 P216--------------------*/
 
 	/*
 	 * 功能: Compute s(t) for a cubic time scaling
@@ -552,6 +497,42 @@ namespace mr
 	                                                 const Eigen::MatrixXd& Xend,
 	                                                 double Tf, int N, int method);
 
+	/*--------------------第11章 机器人控制 P287--------------------*/
+
+	/*
+	 * 功能: Compute the joint control torques at a particular time instant
+	 * 输入:
+	 *  thetalist: n-vector of joint variables
+	 *  dthetalist: n-vector of joint rates
+	 *	eint: n-vector of the time-integral of joint errors
+	 *	g: Gravity vector g
+	 *  Mlist: List of link frames {i} relative to {i-1} at the home position
+	 *  Glist: Spatial inertia matrices Gi of the links
+	 *  Slist: Screw axes Si of the joints in a space frame, in the format
+	 *         of a matrix with the screw axes as the columns.
+	 *  thetalistd: n-vector of reference joint variables
+	 *  dthetalistd: n-vector of reference joint rates
+	 *  ddthetalistd: n-vector of reference joint accelerations
+	 *	Kp: The feedback proportional gain (identical for each joint)
+	 *	Ki: The feedback integral gain (identical for each joint)
+	 *	Kd: The feedback derivative gain (identical for each joint)
+	 *
+	 * 输出:
+	 *  tau_computed: The vector of joint forces/torques computed by the feedback
+	 *				  linearizing controller at the current instant
+	 */
+	Eigen::VectorXd ComputedTorque(const Eigen::VectorXd& thetalist,
+	                               const Eigen::VectorXd& dthetalist,
+	                               const Eigen::VectorXd& eint,
+	                               const Eigen::VectorXd& g,
+	                               const std::vector<Eigen::MatrixXd>& Mlist,
+	                               const std::vector<Eigen::MatrixXd>& Glist,
+	                               const Eigen::MatrixXd& Slist,
+	                               const Eigen::VectorXd& thetalistd,
+	                               const Eigen::VectorXd& dthetalistd,
+	                               const Eigen::VectorXd& ddthetalistd,
+	                               double Kp, double Ki, double Kd);
+
 	/*
 	 * 功能: Compute the motion of a serial chain given an open-loop history of joint forces/torques
 	 * 输入:
@@ -596,6 +577,23 @@ namespace mr
 	                                             const std::vector<Eigen::MatrixXd>& Mtildelist,
 	                                             const std::vector<Eigen::MatrixXd>& Gtildelist,
 	                                             double Kp, double Ki, double Kd, double dt, int intRes);
+
+	/*--------------------其他--------------------*/
+
+	/*
+	 * 功能: 判断值是否可以忽略不计(接近于0)
+	 * 输入: 被检查的值(double类型)
+	 * 返回: true-可以忽略不计，false-不能忽略不计
+	 */
+	bool NearZero(const double val);
+
+	/*
+	 * 功能: 返回输入矩阵的标准化
+	 * 输入: Eigen::MatrixXd
+	 * 输出: Eigen::MatrixXd
+	 * 注: 对于行向量，使用MatrixXd代替VectorXd
+	 */
+	Eigen::MatrixXd Normalize(Eigen::MatrixXd V);
 
 	/*
 	 * 功能: 返回 projection of one matrix into SO(3)
@@ -663,5 +661,4 @@ namespace mr
 	 *	 true if T is very close to or in SE(3), false otherwise
 	 */
 	bool TestIfSE3(const Eigen::Matrix4d& T);
-
 }

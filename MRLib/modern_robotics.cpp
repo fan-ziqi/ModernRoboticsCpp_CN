@@ -1,10 +1,5 @@
 #include "modern_robotics.h"
 
-/*
- * modernRobotics.cpp
- * 改编自 modernrobotics.org 提供的 modern_robotics.py
- * 提供了有用的雅可比和坐标表示函数
- */
 #include <Eigen/Dense>
 #include <cmath>
 #include <vector>
@@ -13,19 +8,7 @@
 
 namespace mr
 {
-	bool NearZero(const double val)
-	{
-		return (std::abs(val) < .000001);
-	}
-
-
-	Eigen::MatrixXd Normalize(Eigen::MatrixXd V)
-	{
-		V.normalize();
-		return V;
-	}
-
-	/*--------------------第三章 刚体运动 P69--------------------*/
+	/*--------------------第3章 刚体运动 P69--------------------*/
 
 	Eigen::MatrixXd RotInv(const Eigen::MatrixXd& R)
 	{
@@ -249,7 +232,7 @@ namespace mr
 		return m_ret;
 	}
 
-	/*--------------------第四章 正向运动学 P99--------------------*/
+	/*--------------------第4章 正向运动学 P99--------------------*/
 
 	Eigen::MatrixXd FKinSpace(const Eigen::MatrixXd& M,
 							  const Eigen::MatrixXd& Slist,
@@ -275,7 +258,7 @@ namespace mr
 		return T;
 	}
 
-	/*--------------------第五章 一阶运动学与静力学 P125--------------------*/
+	/*--------------------第5章 一阶运动学与静力学 P125--------------------*/
 
 	Eigen::MatrixXd JacobianSpace(const Eigen::MatrixXd& Slist,
 								  const Eigen::MatrixXd& thetaList)
@@ -310,7 +293,7 @@ namespace mr
 		return Jb;
 	}
 
-	/*--------------------第六章 逆运动学 P144--------------------*/
+	/*--------------------第6章 逆运动学 P144--------------------*/
 
 	bool IKinBody(const Eigen::MatrixXd& Blist,
 	              const Eigen::MatrixXd& M,
@@ -376,7 +359,7 @@ namespace mr
 		return !err;
 	}
 
-	/*--------------------第八章 开链动力学 P197--------------------*/
+	/*--------------------第8章 开链动力学 P197--------------------*/
 
 	Eigen::MatrixXd ad(Eigen::VectorXd V)
 	{
@@ -599,28 +582,7 @@ namespace mr
 		return JointTraj_ret;
 	}
 
-	Eigen::VectorXd ComputedTorque(const Eigen::VectorXd& thetalist,
-								   const Eigen::VectorXd& dthetalist,
-								   const Eigen::VectorXd& eint,
-								   const Eigen::VectorXd& g,
-								   const std::vector<Eigen::MatrixXd>& Mlist,
-								   const std::vector<Eigen::MatrixXd>& Glist,
-								   const Eigen::MatrixXd& Slist,
-								   const Eigen::VectorXd& thetalistd,
-								   const Eigen::VectorXd& dthetalistd,
-								   const Eigen::VectorXd& ddthetalistd,
-								   double Kp, double Ki, double Kd)
-	{
-
-		Eigen::VectorXd e = thetalistd - thetalist;  // position err
-		Eigen::VectorXd tau_feedforward = MassMatrix(thetalist, Mlist, Glist, Slist)*(Kp*e + Ki * (eint + e) + Kd * (dthetalistd - dthetalist));
-
-		Eigen::VectorXd Ftip = Eigen::VectorXd::Zero(6);
-		Eigen::VectorXd tau_inversedyn = InverseDynamics(thetalist, dthetalist, ddthetalistd, g, Ftip, Mlist, Glist, Slist);
-
-		Eigen::VectorXd tau_computed = tau_feedforward + tau_inversedyn;
-		return tau_computed;
-	}
+	/*--------------------第9章 轨迹生成 P216--------------------*/
 
 	double CubicTimeScaling(double Tf, double t)
 	{
@@ -711,6 +673,32 @@ namespace mr
 		}
 		return traj;
 	}
+
+	/*--------------------第11章 机器人控制 P287--------------------*/
+
+	Eigen::VectorXd ComputedTorque(const Eigen::VectorXd& thetalist,
+	                               const Eigen::VectorXd& dthetalist,
+	                               const Eigen::VectorXd& eint,
+	                               const Eigen::VectorXd& g,
+	                               const std::vector<Eigen::MatrixXd>& Mlist,
+	                               const std::vector<Eigen::MatrixXd>& Glist,
+	                               const Eigen::MatrixXd& Slist,
+	                               const Eigen::VectorXd& thetalistd,
+	                               const Eigen::VectorXd& dthetalistd,
+	                               const Eigen::VectorXd& ddthetalistd,
+	                               double Kp, double Ki, double Kd)
+	{
+
+		Eigen::VectorXd e = thetalistd - thetalist;  // position err
+		Eigen::VectorXd tau_feedforward = MassMatrix(thetalist, Mlist, Glist, Slist)*(Kp*e + Ki * (eint + e) + Kd * (dthetalistd - dthetalist));
+
+		Eigen::VectorXd Ftip = Eigen::VectorXd::Zero(6);
+		Eigen::VectorXd tau_inversedyn = InverseDynamics(thetalist, dthetalist, ddthetalistd, g, Ftip, Mlist, Glist, Slist);
+
+		Eigen::VectorXd tau_computed = tau_feedforward + tau_inversedyn;
+		return tau_computed;
+	}
+
 	std::vector<Eigen::MatrixXd> SimulateControl(const Eigen::VectorXd& thetalist,
 												 const Eigen::VectorXd& dthetalist,
 												 const Eigen::VectorXd& g,
@@ -755,6 +743,20 @@ namespace mr
 		ControlTauTraj_ret.push_back(taumatT.transpose());
 		ControlTauTraj_ret.push_back(thetamatT.transpose());
 		return ControlTauTraj_ret;
+	}
+
+	/*--------------------其他--------------------*/
+
+	bool NearZero(const double val)
+	{
+		return (std::abs(val) < .000001);
+	}
+
+
+	Eigen::MatrixXd Normalize(Eigen::MatrixXd V)
+	{
+		V.normalize();
+		return V;
 	}
 
 	Eigen::MatrixXd ProjectToSO3(const Eigen::MatrixXd& M)
