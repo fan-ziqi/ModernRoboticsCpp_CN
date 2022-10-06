@@ -49,6 +49,38 @@ namespace mr
 	Eigen::Matrix3d MatrixLog3(const Eigen::Matrix3d& R);
 
 	/*
+	 * 功能: 返回 the Frobenius norm to describe the distance of M from the SO(3) manifold
+	 * 输入:
+	 * M: A 3x3 matrix
+	 * 输出:
+	 *	 the distance from mat to the SO(3) manifold using the following
+	 * method:
+	 *  If det(M) <= 0, return a large number.
+	 *  If det(M) > 0, return norm(M^T*M - I).
+	 */
+	double DistanceToSO3(const Eigen::Matrix3d& M);
+
+	/*
+	 * 功能: 返回 true if M is close to or on the manifold SO(3)
+	 * 输入:
+	 * M: A 3x3 matrix
+	 * 输出:
+	 *	 true if M is very close to or in SO(3), false otherwise
+	 */
+	bool TestIfSO3(const Eigen::Matrix3d& M);
+
+	/*
+	 * 功能: 返回 projection of one matrix into SO(3)
+	 * 输入:
+	 * M:		A matrix near SO(3) to project to SO(3)
+	 * 返回: The closest matrix R that is in SO(3)
+	 * Projects a matrix mat to the closest matrix in SO(3) using singular-value decomposition
+	 * (see http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
+	 * This 功能 is only appropriate for matrices close to SO(3).
+	 */
+	Eigen::MatrixXd ProjectToSO3(const Eigen::MatrixXd& M);
+
+	/*
 	 * 功能: 将旋转矩阵R∈SO(3)和位置向量p∈R3组合成齐次变换矩阵
 	 * 输入: 旋转矩阵R, 位置向量p
 	 * 返回: 齐次变换矩阵 T = [ [R, p],
@@ -126,7 +158,52 @@ namespace mr
 	 */
 	Eigen::MatrixXd MatrixLog6(const Eigen::MatrixXd& T);
 
+	/*
+	 * 功能: 返回 the Frobenius norm to describe the distance of mat from the SE(3) manifold
+	 * 输入:
+	 * T: A 4x4 matrix
+	 * 输出:
+	 *	 the distance from T to the SE(3) manifold using the following
+	 * method:
+	 *  Compute the determinant of matR, the top 3x3 submatrix of T.
+	 *  If det(matR) <= 0, return a large number.
+	 *  If det(matR) > 0, replace the top 3x3 submatrix of mat with matR^T*matR,
+	 *  and set the first three entries of the fourth column of mat to zero. Then
+	 *  return norm(T - I).
+	 */
+	double DistanceToSE3(const Eigen::Matrix4d& T);
+
+	/*
+	 * 功能: 返回 true if T is close to or on the manifold SE(3)
+	 * 输入:
+	 * M: A 4x4 matrix
+	 * 输出:
+	 *	 true if T is very close to or in SE(3), false otherwise
+	 */
+	bool TestIfSE3(const Eigen::Matrix4d& T);
+
+	/*
+	 * 功能: 返回 projection of one matrix into SE(3)
+	 * 输入:
+	 * M:		A 4x4 matrix near SE(3) to project to SE(3)
+	 * 返回: The closest matrix T that is in SE(3)
+	 * Projects a matrix mat to the closest matrix in SO(3) using singular-value decomposition
+	 * (see http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
+	 * This 功能 is only appropriate for matrices close to SE(3).
+	 */
+	Eigen::MatrixXd ProjectToSE3(const Eigen::MatrixXd& M);
+
 	/*--------------------第4章 正向运动学 P99--------------------*/
+
+	/*
+	 * 功能: 给定末端的初始位形M,末端坐标系下的关节旋量Blist,以及关节值thetalist,计算末端坐标系
+	 * 输入: 末端的初始位形M(位置和方向), 末端坐标系下的关节旋量Blist, 关节值thetalist
+	 * 返回: 当关节位于指定值时，末端坐标系的变换矩阵
+	 * 注:   FK表示正向运动学
+	 */
+	Eigen::MatrixXd FKinBody(const Eigen::MatrixXd& M,
+	                         const Eigen::MatrixXd& Blist,
+	                         const Eigen::VectorXd& thetaList);
 
 	/*
 	 * 功能: 给定末端的初始位形M,空间坐标系下的关节旋量Slist,以及关节值thetalist,计算末端坐标系
@@ -138,17 +215,15 @@ namespace mr
 							  const Eigen::MatrixXd& Slist,
 							  const Eigen::VectorXd& thetaList);
 
-	/*
-	 * 功能: 给定末端的初始位形M,末端坐标系下的关节旋量Blist,以及关节值thetalist,计算末端坐标系
-	 * 输入: 末端的初始位形M(位置和方向), 末端坐标系下的关节旋量Slist, 关节值thetalist
-	 * 返回: 当关节位于指定值时，末端坐标系的变换矩阵
-	 * 注:   FK表示正向运动学
-	 */
-	Eigen::MatrixXd FKinBody(const Eigen::MatrixXd& M,
-							 const Eigen::MatrixXd& Blist,
-							 const Eigen::VectorXd& thetaList);
-
 	/*--------------------第5章 一阶运动学与静力学 P125--------------------*/
+
+	/*
+	 * 功能: 给定物体坐标系下描述的各关节旋量Bi及关节角, 计算物体雅可比Jb(θ)∈R(6xn)
+	 * 输入: 物体坐标系下的各关节旋量Bi, 关节角
+	 * 返回: 6xn 物体雅可比
+	 */
+	Eigen::MatrixXd JacobianBody(const Eigen::MatrixXd& Blist,
+	                             const Eigen::MatrixXd& thetaList);
 
 	/*
 	 * 功能: 给定空间坐标系下描述的各关节旋量Si及关节角, 计算空间雅可比Jb(θ)∈R(6xn)
@@ -157,14 +232,6 @@ namespace mr
 	 */
 	Eigen::MatrixXd JacobianSpace(const Eigen::MatrixXd& Slist,
 								  const Eigen::MatrixXd& thetaList);
-
-	/*
-	 * 功能: 给定物体坐标系下描述的各关节旋量Bi及关节角, 计算物体雅可比Jb(θ)∈R(6xn)
-	 * 输入: 物体坐标系下的各关节旋量Bi, 关节角
-	 * 返回: 6xn 物体雅可比
-	 */
-	Eigen::MatrixXd JacobianBody(const Eigen::MatrixXd& Blist,
-								 const Eigen::MatrixXd& thetaList);
 
 	/*--------------------第6章 逆运动学 P144--------------------*/
 
@@ -211,7 +278,7 @@ namespace mr
 
 	/*
 	 * 功能: 计算给定6矢量的6x6矩阵[adV]
-	 * 输入: Eigen::VectorXd (6x1)
+	 * 输入: Eigen::VectorXd (6x1) (空间速度)
 	 * 输出: Eigen::MatrixXd (6x6)
 	 * 注: 可用于计算李括号 [V1, V2] = [adV1]V2
 	 */
@@ -225,7 +292,7 @@ namespace mr
 	 *      dthetalist: n维关节速度向量0'
 	 *      ddthetalist: n维关节加速度向量0''
 	 *      g: 重力向量G
-	 *      Ftip: 在坐标系{n+1}中表示的施加到末端执行器的力旋量
+	 *      Ftip: 在末端执行器坐标系{n+1}中表示的由末端执行器作用于环境的力旋量
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
 	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
@@ -291,7 +358,7 @@ namespace mr
 	 * 功能: 调用InverseDynamics，且令g=0、dthetalist=0、ddthetalist=0
 	 * 输入:
 	 *      thetalist: n维关节角度向量0
-	 *      Ftip: 在坐标系{n+1}中表示的施加到末端执行器的力旋量
+	 *      Ftip: 在末端执行器坐标系{n+1}中表示的由末端执行器作用于环境的力旋量
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
 	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
@@ -313,7 +380,7 @@ namespace mr
 	 *      dthetalist: n维关节速度向量0'
 	 *      taulist: 所需关节力-力矩的n维向量τ
 	 *      g: 重力向量G
-	 *      Ftip: 在坐标系{n+1}中表示的施加到末端执行器的力旋量
+	 *      Ftip: 在末端执行器坐标系{n+1}中表示的由末端执行器作用于环境的力旋量
 	 *      Mlist: 变换矩阵M(i-1,i)组成的列表,其中M(i-1,i)指定了当机器人处于其原始位置时连杆质心坐标系{i}相对于{i-1}的位形
 	 *      Glist: 连杆空间惯量矩阵Gi组成的列表
 	 *      Slist: 在基座坐标系中表示的关节旋量轴Si组成的列表
@@ -594,73 +661,6 @@ namespace mr
 	 * 注: 对于行向量，使用MatrixXd代替VectorXd
 	 */
 	Eigen::MatrixXd Normalize(Eigen::MatrixXd V);
-
-	/*
-	 * 功能: 返回 projection of one matrix into SO(3)
-	 * 输入:
-	 * M:		A matrix near SO(3) to project to SO(3)
-	 * 返回: The closest matrix R that is in SO(3)
-	 * Projects a matrix mat to the closest matrix in SO(3) using singular-value decomposition
-	 * (see http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
-	 * This 功能 is only appropriate for matrices close to SO(3).
-	 */
-	Eigen::MatrixXd ProjectToSO3(const Eigen::MatrixXd& M);
-
-	/*
-	 * 功能: 返回 projection of one matrix into SE(3)
-	 * 输入:
-	 * M:		A 4x4 matrix near SE(3) to project to SE(3)
-	 * 返回: The closest matrix T that is in SE(3)
-	 * Projects a matrix mat to the closest matrix in SO(3) using singular-value decomposition
-	 * (see http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
-	 * This 功能 is only appropriate for matrices close to SE(3).
-	 */
-	Eigen::MatrixXd ProjectToSE3(const Eigen::MatrixXd& M);
-
-	/*
-	 * 功能: 返回 the Frobenius norm to describe the distance of M from the SO(3) manifold
-	 * 输入:
-	 * M: A 3x3 matrix
-	 * 输出:
-	 *	 the distance from mat to the SO(3) manifold using the following
-	 * method:
-	 *  If det(M) <= 0, return a large number.
-	 *  If det(M) > 0, return norm(M^T*M - I).
-	 */
-	double DistanceToSO3(const Eigen::Matrix3d& M);
-
-	/*
-	 * 功能: 返回 the Frobenius norm to describe the distance of mat from the SE(3) manifold
-	 * 输入:
-	 * T: A 4x4 matrix
-	 * 输出:
-	 *	 the distance from T to the SE(3) manifold using the following
-	 * method:
-	 *  Compute the determinant of matR, the top 3x3 submatrix of T.
-	 *  If det(matR) <= 0, return a large number.
-	 *  If det(matR) > 0, replace the top 3x3 submatrix of mat with matR^T*matR,
-	 *  and set the first three entries of the fourth column of mat to zero. Then
-	 *  return norm(T - I).
-	 */
-	double DistanceToSE3(const Eigen::Matrix4d& T);
-
-	/*
-	 * 功能: 返回 true if M is close to or on the manifold SO(3)
-	 * 输入:
-	 * M: A 3x3 matrix
-	 * 输出:
-	 *	 true if M is very close to or in SO(3), false otherwise
-	 */
-	bool TestIfSO3(const Eigen::Matrix3d& M);
-
-	/*
-	 * 功能: 返回 true if T is close to or on the manifold SE(3)
-	 * 输入:
-	 * M: A 4x4 matrix
-	 * 输出:
-	 *	 true if T is very close to or in SE(3), false otherwise
-	 */
-	bool TestIfSE3(const Eigen::Matrix4d& T);
 
 	/*
 	 * 功能: 获得旋转矩阵
