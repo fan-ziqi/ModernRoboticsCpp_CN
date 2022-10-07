@@ -5,25 +5,25 @@
 
 void RotInvTest();
 void VecToso3Test();
-void so3ToVecTest();//TODO
-void AxisAng3Test();//TODO
-void MatrixExp3Test();//TODO
-void MatrixLog3Test();//TODO
-void DistanceToSO3Test();
-void TestIfSO3Test();
+void so3ToVecTest();
+void AxisAng3Test();
+void MatrixExp3Test();
+void MatrixLog3Test();
+void DistanceToSO3Test();//TODO
+void TestIfSO3Test();//TODO
 void ProjectToSO3Test();//TODO
-void RpToTransTest();//TODO
-void TransToRpTest();//TODO
+void RpToTransTest();
+void TransToRpTest();
 void TransInvTest();
-void VecTose3Test();//TODO
-void se3ToVecTest();//TODO
+void VecTose3Test();
+void se3ToVecTest();
 void AdjointTest();
 void ScrewToAxisTest();
 void AxisAng6Test();
-void MatrixExp6Test();//TODO
+void MatrixExp6Test();
 void MatrixLog6Test();
-void DistanceToSE3Test();
-void TestIfSE3Test();
+void DistanceToSE3Test();//TODO
+void TestIfSE3Test();//TODO
 void ProjectToSE3Test();//TODO
 
 /*--------------------第4章 正向运动学 P99--------------------*/
@@ -51,23 +51,23 @@ void GravityForcesTest();
 void EndEffectorForcesTest();
 void ForwardDynamicsTest();
 void EulerStepTest();
-void InverseDynamicsTrajectoryTest();
-void ForwardDynamicsTrajectoryTest();
+void InverseDynamicsTrajectoryTest();//TODO
+void ForwardDynamicsTrajectoryTest();//TODO
 
 /*--------------------第9章 轨迹生成 P216--------------------*/
 
-void CubicTimeScalingTest();
-void QuinticTimeScalingTest();
-void JointTrajectoryTest();
-void ScrewTrajectoryTest();
-void CartesianTrajectoryTest();
+void CubicTimeScalingTest();//TODO
+void QuinticTimeScalingTest();//TODO
+void JointTrajectoryTest();//TODO
+void ScrewTrajectoryTest();//TODO
+void CartesianTrajectoryTest();//TODO
 
 /*--------------------第11章 机器人控制 P287--------------------*/
 
-void ComputedTorqueTest();
-void SimulateControlTest();
+void ComputedTorqueTest();//TODO
+void SimulateControlTest();//TODO
 
 /*--------------------其他--------------------*/
-void UR5Test();
+void UR5Test();//TODO
 
 #endif //MRTEST_H
