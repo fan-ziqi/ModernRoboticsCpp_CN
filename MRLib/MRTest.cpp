@@ -139,12 +139,14 @@ void MatrixLog3Test()
 
 void DistanceToSO3Test()
 {
+	//要计算的矩阵mat
 	Eigen::Matrix3d mat;
 	mat <<
 		1.0, 0.0,   0.0,
 		0.0, 0.1, -0.95,
 		0.0, 1.0,   0.1;
 
+	//计算mat到SO(3)的距离
 	double d = mr::DistanceToSO3(mat);
 
 	//正确结果
@@ -157,12 +159,14 @@ void DistanceToSO3Test()
 
 void TestIfSO3Test()
 {
+	//要判断的矩阵mat
 	Eigen::Matrix3d mat;
 	mat <<
 		1.0, 0.0,   0.0,
 		0.0, 0.1, -0.95,
 		0.0, 1.0,   0.1;
 
+	//检查mat是否接近或位于SO(3)上
 	bool judge = mr::TestIfSO3(mat);
 
 	//正确结果
@@ -175,12 +179,14 @@ void TestIfSO3Test()
 
 void ProjectToSO3Test()
 {
+	//要计算的矩阵mat
 	Eigen::Matrix3d mat;
 	mat <<
 		 0.675, 0.150,  0.720,
 		 0.370, 0.771, -0.511,
 		-0.630, 0.619,  0.472;
 
+	//返回mat在SO(3)中的投影
 	Eigen::MatrixXd R = mr::ProjectToSO3(mat);
 
 	//正确结果
@@ -488,6 +494,7 @@ void MatrixLog6Test()
 
 void DistanceToSE3Test()
 {
+	//要计算的矩阵mat
 	Eigen::Matrix4d mat;
 	mat <<
 		1.0, 0.0,   0.0,  1.2,
@@ -495,6 +502,7 @@ void DistanceToSE3Test()
 		0.0, 1.0,   0.1, -0.9,
 		0.0, 0.0,   0.1, 0.98;
 
+	//计算mat到SE(3)的距离
 	double d = mr::DistanceToSE3(mat);
 
 	//正确结果
@@ -507,6 +515,7 @@ void DistanceToSE3Test()
 
 void TestIfSE3Test()
 {
+	//要判断的矩阵mat
 	Eigen::Matrix4d mat;
 	mat <<
 		1.0, 0.0,   0.0,  1.2,
@@ -514,6 +523,7 @@ void TestIfSE3Test()
 		0.0, 1.0,   0.1, -0.9,
 		0.0, 0.0,   0.1, 0.98;
 
+	//检查mat是否接近或位于SE(3)上
 	bool judge = mr::TestIfSE3(mat);
 
 	//正确结果
@@ -526,6 +536,7 @@ void TestIfSE3Test()
 
 void ProjectToSE3Test()
 {
+	//要计算的矩阵mat
 	Eigen::Matrix4d mat;
 	mat <<
 		 0.675, 0.150,  0.720, 1.2,
@@ -533,7 +544,7 @@ void ProjectToSE3Test()
 		-0.630, 0.619,  0.472, 3.6,
 		 0.003, 0.002,  0.010, 0.9;
 
-	//齐次变换矩阵T
+	//返回mat在SO(3)中的投影
 	Eigen::MatrixXd T = mr::ProjectToSE3(mat);
 
 	//正确结果

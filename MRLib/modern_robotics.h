@@ -49,34 +49,29 @@ namespace mr
 	Eigen::Matrix3d MatrixLog3(const Eigen::Matrix3d& R);
 
 	/*
-	 * 功能: 返回 the Frobenius norm to describe the distance of M from the SO(3) manifold
-	 * 输入:
-	 * M: A 3x3 matrix
-	 * 输出:
-	 *	 the distance from mat to the SO(3) manifold using the following
-	 * method:
-	 *  If det(M) <= 0, return a large number.
-	 *  If det(M) > 0, return norm(M^T*M - I).
+	 * 功能: 返回Frobenius范数以描述M到SO(3)的距离
+	 *      注:特殊正交群SO(3)也称为旋转矩阵群，是所有3x3旋转矩阵R的集合
+	 * 输入: 3x3矩阵M
+	 * 输出: 使用以下方法计算M到SO(3)的距离:
+	 *      如果 det(M) <= 0, 返回一个比较大的数.
+	 *      如果 det(M) > 0, 返回norm(M^T*M - I).
 	 */
 	double DistanceToSO3(const Eigen::Matrix3d& M);
 
 	/*
-	 * 功能: 返回 true if M is close to or on the manifold SO(3)
-	 * 输入:
-	 * M: A 3x3 matrix
-	 * 输出:
-	 *	 true if M is very close to or in SO(3), false otherwise
+	 * 功能: 检查M是否接近或位于SO(3)上
+	 *      注:特殊正交群SO(3)也称为旋转矩阵群，是所有3x3实数矩阵R的集合
+	 * 输入: 3x3矩阵M
+	 * 输出: 如果M接近或位于SO(3)上，返回true
 	 */
 	bool TestIfSO3(const Eigen::Matrix3d& M);
 
 	/*
-	 * 功能: 返回 projection of one matrix into SO(3)
-	 * 输入:
-	 * M:		A matrix near SO(3) to project to SO(3)
-	 * 返回: The closest matrix R that is in SO(3)
-	 * Projects a matrix mat to the closest matrix in SO(3) using singular-value decomposition
-	 * (see http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
-	 * This 功能 is only appropriate for matrices close to SO(3).
+	 * 功能: 返回一个矩阵在SO(3)中的投影
+	 *      注:特殊正交群SO(3)也称为旋转矩阵群，是所有3x3实数矩阵R的集合
+	 * 输入: M:一个在SO(3)附近的矩阵，将要被投影到SO(3)
+	 * 返回: SO(3)中最接近的矩阵R。该函数使用奇异值分解，仅适用于接近SO(3)的矩阵。
+	 *      (详见 http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
 	 */
 	Eigen::MatrixXd ProjectToSO3(const Eigen::MatrixXd& M);
 
@@ -159,37 +154,31 @@ namespace mr
 	Eigen::MatrixXd MatrixLog6(const Eigen::MatrixXd& T);
 
 	/*
-	 * 功能: 返回 the Frobenius norm to describe the distance of mat from the SE(3) manifold
-	 * 输入:
-	 * T: A 4x4 matrix
-	 * 输出:
-	 *	 the distance from T to the SE(3) manifold using the following
-	 * method:
-	 *  Compute the determinant of matR, the top 3x3 submatrix of T.
-	 *  If det(matR) <= 0, return a large number.
-	 *  If det(matR) > 0, replace the top 3x3 submatrix of mat with matR^T*matR,
-	 *  and set the first three entries of the fourth column of mat to zero. Then
-	 *  return norm(T - I).
+	 * 功能: 返回Frobenius范数以描述T到SE(3)的距离
+	 *      注:特殊欧式群SE(3)也称为刚体运动群或齐次变换矩阵群，是所有4x4实数矩阵T的集合
+	 * 输入: 4x4矩阵T
+	 * 输出: 使用以下方法计算T到SE(3)的距离:
+	 *      matR为T的左上角3x3子矩阵
+	 *      如果 det(matR) <= 0, 返回一个比较大的数.
+	 *      如果 det(matR) > 0, 将左上角的3x3子矩阵替换为matR^T*matR
+	 *                         并将第四列的前三行设置为0，然后返回norm(T - I)
 	 */
 	double DistanceToSE3(const Eigen::Matrix4d& T);
 
 	/*
-	 * 功能: 返回 true if T is close to or on the manifold SE(3)
-	 * 输入:
-	 * M: A 4x4 matrix
-	 * 输出:
-	 *	 true if T is very close to or in SE(3), false otherwise
+	 * 功能: 检查T是否接近或位于SE(3)上
+	 *      注:特殊欧式群SE(3)也称为刚体运动群或齐次变换矩阵群，是所有4x4实数矩阵T的集合
+	 * 输入: 4x4矩阵T
+	 * 输出: 如果T接近或位于SE(3)上，返回true
 	 */
 	bool TestIfSE3(const Eigen::Matrix4d& T);
 
 	/*
-	 * 功能: 返回 projection of one matrix into SE(3)
-	 * 输入:
-	 * M:		A 4x4 matrix near SE(3) to project to SE(3)
-	 * 返回: The closest matrix T that is in SE(3)
-	 * Projects a matrix mat to the closest matrix in SO(3) using singular-value decomposition
-	 * (see http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
-	 * This 功能 is only appropriate for matrices close to SE(3).
+	 * 功能: 返回一个矩阵在SE(3)中的投影
+	 *      注:特殊欧式群SE(3)也称为刚体运动群或齐次变换矩阵群，是所有4x4实数矩阵T的集合
+	 * 输入: M:一个在SE(3)附近的矩阵，将要被投影到SE(3)
+	 * 返回: SE(3)中最接近的矩阵T。该函数使用奇异值分解，仅适用于接近SE(3)的矩阵。
+	 *      (详见 http://hades.mech.northwestern.edu/index.php/Modern_Robotics_Linear_Algebra_Review).
 	 */
 	Eigen::MatrixXd ProjectToSE3(const Eigen::MatrixXd& M);
 

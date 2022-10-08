@@ -9,9 +9,9 @@ void so3ToVecTest();
 void AxisAng3Test();
 void MatrixExp3Test();
 void MatrixLog3Test();
-void DistanceToSO3Test();//TODO
-void TestIfSO3Test();//TODO
-void ProjectToSO3Test();//TODO
+void DistanceToSO3Test();
+void TestIfSO3Test();
+void ProjectToSO3Test();
 void RpToTransTest();
 void TransToRpTest();
 void TransInvTest();
@@ -22,9 +22,9 @@ void ScrewToAxisTest();
 void AxisAng6Test();
 void MatrixExp6Test();
 void MatrixLog6Test();
-void DistanceToSE3Test();//TODO
-void TestIfSE3Test();//TODO
-void ProjectToSE3Test();//TODO
+void DistanceToSE3Test();
+void TestIfSE3Test();
+void ProjectToSE3Test();
 
 /*--------------------第4章 正向运动学 P99--------------------*/
 

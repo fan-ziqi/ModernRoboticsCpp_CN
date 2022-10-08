@@ -15,9 +15,9 @@ int main()
 //	AxisAng3Test();
 //	MatrixExp3Test();
 //	MatrixLog3Test();
-//	DistanceToSO3Test();//TODO
-//	TestIfSO3Test();//TODO
-//	ProjectToSO3Test();//TODO
+//	DistanceToSO3Test();
+//	TestIfSO3Test();
+//	ProjectToSO3Test();
 //	RpToTransTest();
 //	TransToRpTest();
 //	TransInvTest();
@@ -28,9 +28,9 @@ int main()
 //	AxisAng6Test();
 //	MatrixExp6Test();
 //	MatrixLog6Test();
-//	DistanceToSE3Test();//TODO
-//	TestIfSE3Test();//TODO
-//	ProjectToSE3Test();//TODO
+//	DistanceToSE3Test();
+//	TestIfSE3Test();
+//	ProjectToSE3Test();
 
 	/*--------------------第4章 正向运动学 P99--------------------*/
 

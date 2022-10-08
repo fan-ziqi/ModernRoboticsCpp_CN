@@ -106,7 +106,7 @@ namespace mr
 		Eigen::MatrixXd R = svd.matrixU() * svd.matrixV().transpose();
 		if (R.determinant() < 0)
 		{
-			// In this case the result may be far from M; reverse sign of 3rd column
+			// 这种情况下结果会远离M; 反转第三列的符号
 			R.col(2) *= -1;
 		}
 		return R;
